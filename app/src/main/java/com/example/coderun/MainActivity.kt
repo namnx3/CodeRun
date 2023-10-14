@@ -1,11 +1,15 @@
 package com.example.coderun
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.coderun.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,17 +30,62 @@ class MainActivity : AppCompatActivity() {
 
         this.initData()
         initView()
-        binding.btLoadData.setOnClickListener {
-            GlobalScope.launch {
-                val list = getLocalImagePaths()
-                withContext(Dispatchers.Main) {
-                    listData.addAll(list.toMutableList())
-                    adapter.notifyDataSetChanged()
-                }
-            }
 
+        if (checkPermission()) {
+            getAllImage()
+            return
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(
+                arrayOf(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Manifest.permission.READ_MEDIA_IMAGES
+                    } else {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }
+                ), 100
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getAllImage()
+        }
+    }
+
+    private fun getAllImage(){
+        GlobalScope.launch {
+            val list = getLocalImagePaths()
+            withContext(Dispatchers.Main) {
+                listData.addAll(list.toMutableList())
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun checkPermission(): Boolean {
+        val permissionString = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            return true
+        }
+
+        if (checkSelfPermission(permissionString) == PackageManager.PERMISSION_DENIED) {
+            return false
+        }
+
+        return true
     }
 
     private fun initData() {
