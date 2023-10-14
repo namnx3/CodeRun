@@ -1,6 +1,7 @@
 package com.example.coderun
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -128,16 +129,23 @@ class MainActivity : AppCompatActivity() {
         }
         adapter.setOnclickDetailPhoto(object : GlideAdapter.OnClickDetailPhoto{
             override fun onClickDetailSelected(listNew: MutableList<Int>, position: Int) {
-                val list= mutableListOf<Int>()
-                list.addAll(listNew)
-                for (index in list) {
-                    Log.e("INdexURL",  listData[index].avatar)
+                val urlPath = listData[position]
 
-                }
+                val intent = Intent(this@MainActivity, DetailPhotoActicity::class.java)
+                intent.putExtra(Constants.URL_IMAGE, urlPath.avatar)
+                this@MainActivity.startActivity(intent)
+//                val list= mutableListOf<Int>()
+//                list.addAll(listNew)
+//                for (index in list) {
+//                    Log.e("INdexURL",  listData[index].avatar)
+//
+//                }
             }
 
             override fun onClickDetail(item: ImageObject) {
-                TODO("Not yet implemented")
+                val intent = Intent(this@MainActivity, DetailPhotoActicity::class.java)
+                intent.putExtra(Constants.URL_IMAGE, item.avatar)
+                this@MainActivity.startActivity(intent)
             }
 
 

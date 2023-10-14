@@ -1,19 +1,21 @@
 package com.example.coderun
 
+import android.R
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
+import android.text.TextUtils
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import androidx.appcompat.app.AppCompatActivity
 import com.example.coderun.adapter.ImageDetailAdapter
 import com.example.coderun.databinding.ActivityDetailPhotoActicityBinding
 import com.example.coderun.model.Photo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+
 
 class DetailPhotoActicity : AppCompatActivity() {
     private lateinit var binding:ActivityDetailPhotoActicityBinding
@@ -38,6 +40,26 @@ class DetailPhotoActicity : AppCompatActivity() {
         binding.vpDetailPhoto.adapter=detailImageAdapter;
 
 
+        val url = intent.getStringExtra(Constants.URL_IMAGE) ?: ""
+        if (TextUtils.isEmpty(url)) {
+            return
+        }
+
+
+        GlobalScope.launch {
+            val options = BitmapFactory.Options()
+            options.inJustDecodeBounds = true
+            val decodeFile = BitmapFactory.decodeFile(url, options)
+
+            val bitmap=BitmapFactory.decodeFile(url)
+            val bos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos)
+
+            runOnUiThread{
+                binding.ivTest.setImageBitmap(bitmap)
+            }
+        }
+
 
 
 
@@ -45,10 +67,10 @@ class DetailPhotoActicity : AppCompatActivity() {
 
     private fun getListPhoto():MutableList<Photo>{
         val listPhoto:MutableList<Photo> = mutableListOf()
-        listPhoto.add(Photo(R.drawable.img1))
-        listPhoto.add(Photo(R.drawable.img2))
-        listPhoto.add(Photo(R.drawable.img3))
-        listPhoto.add(Photo(R.drawable.img4))
+//        listPhoto.add(Photo(R.drawable.img1))
+//        listPhoto.add(Photo(R.drawable.img2))
+//        listPhoto.add(Photo(R.drawable.img3))
+//        listPhoto.add(Photo(R.drawable.img4))
         return listPhoto
     }
 
