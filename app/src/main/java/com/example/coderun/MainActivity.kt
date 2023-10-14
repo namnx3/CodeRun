@@ -91,8 +91,12 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getAllImage()
+        try {
+            if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getAllImage()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
