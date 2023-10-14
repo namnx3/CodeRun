@@ -1,29 +1,30 @@
 package com.example.coderun
 
-import android.content.ContentUris
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.util.Log
-import android.widget.Button
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
 import com.example.coderun.databinding.ActivityMainBinding
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: GlideAdapter
     private var listData = mutableListOf<String>()
+
+    private var imageLoader: ImageLoader? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        this.initData()
         initView()
         binding.btLoadData.setOnClickListener {
             GlobalScope.launch {
@@ -36,7 +37,16 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
 
+    private fun initData() {
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val height = displayMetrics.heightPixels
+        val width = displayMetrics.widthPixels
+        ImageLoader(this).setWithHeight(height, width)
+        val size = width / 3
+        ImageLoaderUtils.getInstance(this).setHeight(size).setWidth(size)
     }
 
     private fun initView() {
