@@ -20,7 +20,7 @@ class GlideAdapter(
     inner class GlideVH(val binding: ItemImageSlideBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String) {
-            imageLoader?.DisplayImage(item, this.binding.ivImageSlide)
+            ImageLoaderUtils.getInstance(context).load(item, this.binding.ivImage)
         }
     }
 
