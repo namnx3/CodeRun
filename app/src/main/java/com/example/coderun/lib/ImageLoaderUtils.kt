@@ -67,7 +67,7 @@ class ImageLoaderUtils private constructor(context: Context) {
 
     var handler = Handler()
 
-    val stub_id = R.drawable.ic_launcher_background
+    val stub_id = R.drawable.img_loading
 
     fun load(url: String, imageView: ImageView?) {
         if (TextUtils.isEmpty(url)) {
