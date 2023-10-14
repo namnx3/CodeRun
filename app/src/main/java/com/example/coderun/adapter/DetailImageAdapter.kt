@@ -15,9 +15,7 @@ import com.example.coderun.databinding.DetailImageBinding
 import com.example.coderun.model.Photo
 
 class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) : RecyclerView.Adapter<DetailImageAdapter.DetailViewHolder>() {
-    private var onTouchListenerCallback: OnTouchListenerCallback?=null
-    private var touchedPosition = -1
-    private var matrix=Matrix()
+
 
     companion object {
         private const val NONE = 0
@@ -33,10 +31,10 @@ class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) :
         fun onBind(photo: Photo?) {
             val scaleGestureDetector = ScaleGestureDetector(context, ScaleListener(binding.imgPhoto))
             binding.imgPhoto.setImageResource(photo?.img!!)
-            binding.imgPhoto.setOnTouchListener { v, event ->
-                scaleGestureDetector.onTouchEvent(event)
-                return@setOnTouchListener true
-            }
+//            binding.imgPhoto.setOnTouchListener { v, event ->
+//                scaleGestureDetector.onTouchEvent(event)
+//                return@setOnTouchListener true
+//            }
 
         }
     }
@@ -53,12 +51,12 @@ class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) :
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
       holder.onBind(listPhoto[position])
     }
-    fun  setOnTouchDetailPhoto(onTouchDetailPhoto: OnTouchListenerCallback){
-        this.onTouchListenerCallback=onTouchDetailPhoto
-    }
-    interface OnTouchListenerCallback {
-        fun onItemTouched(v:View,  event:MotionEvent,photo: Photo?)
-    }
+//    fun  setOnTouchDetailPhoto(onTouchDetailPhoto: OnTouchListenerCallback){
+//        this.onTouchListenerCallback=onTouchDetailPhoto
+//    }
+//    interface OnTouchListenerCallback {
+//        fun onItemTouched(v:View,  event:MotionEvent,photo: Photo?)
+//    }
 
     inner class ScaleListener(private val imageView: AppCompatImageView) : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         private var scaleFactor = 1.0f

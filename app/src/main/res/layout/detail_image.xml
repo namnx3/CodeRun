@@ -5,11 +5,17 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgPhoto"
-        app:srcCompat="@drawable/img1"
+
+    <com.example.coderun.ZoomLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgPhoto"
+            app:srcCompat="@drawable/img1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.example.coderun.ZoomLinearLayout>
+
 
 
 </LinearLayout>
