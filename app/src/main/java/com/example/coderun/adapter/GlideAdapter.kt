@@ -33,14 +33,15 @@ class GlideAdapter(
             if (onMode) {
                 binding.lnRootChooseItemImgSlide.visibility = View.VISIBLE
                 if (!item.isSelected) {
+                    binding.tvNumberSelectImageSlide.visibility = View.GONE
                     binding.rlBackGroundSelectImageSlide.background = ContextCompat.getDrawable(
                         context,
                         R.drawable.bg_circle_unchecked
                     )
-                    binding.lnRootChooseItemImgSlide.visibility = View.GONE
                     binding.ivImageSlide.alpha = 1f
                 } else {
                     if (item.valeStt != -1) {
+                        binding.tvNumberSelectImageSlide.visibility = View.VISIBLE
                         binding.tvNumberSelectImageSlide.text = item.valeStt.toString()
                     }
                     binding.lnRootChooseItemImgSlide.visibility = View.VISIBLE

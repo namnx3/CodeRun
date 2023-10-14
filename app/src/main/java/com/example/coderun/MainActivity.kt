@@ -101,10 +101,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initEvent() {
-        binding.btLoadData.setOnClickListener {
-            getAllImage()
-        }
-
         adapter.onItemLongClick = {
             adapter.onMode = true
             adapter.notifyDataSetChanged()
