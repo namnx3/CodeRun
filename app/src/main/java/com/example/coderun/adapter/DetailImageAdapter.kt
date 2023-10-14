@@ -15,9 +15,9 @@ import com.example.coderun.databinding.DetailImageBinding
 import com.example.coderun.model.Photo
 
 class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) : RecyclerView.Adapter<DetailImageAdapter.DetailViewHolder>() {
-    private var onclickDetailPhoto: DetailViewHolder.OnclickDetailPhoto?=null
-    private lateinit var scaleGestureDetector: ScaleGestureDetector
-    private var scaleFactor = 1.0f
+    private var onTouchListenerCallback: OnTouchListenerCallback?=null
+    private var touchedPosition = -1
+    private var matrix=Matrix()
 
     companion object {
         private const val NONE = 0
@@ -28,15 +28,15 @@ class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) :
 
     inner class DetailViewHolder(private var binding: DetailImageBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        private var matrix = Matrix()
-        private var mode = NONE
-        private var lastEvent: MotionEvent? = null
-        private var prevX = 0f
-        private var prevY = 0f
 
         @SuppressLint("ClickableViewAccessibility")
         fun onBind(photo: Photo?) {
+            val scaleGestureDetector = ScaleGestureDetector(context, ScaleListener(binding.imgPhoto))
             binding.imgPhoto.setImageResource(photo?.img!!)
+            binding.imgPhoto.setOnTouchListener { v, event ->
+                scaleGestureDetector.onTouchEvent(event)
+                return@setOnTouchListener true
+            }
 
         }
     }
@@ -53,11 +53,24 @@ class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) :
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
       holder.onBind(listPhoto[position])
     }
-    fun  setOnclickDetailPhoto(onclickDetailPhoto: OnclickDetailPhoto){
-        this.onclickDetailPhoto=onclickDetailPhoto
+    fun  setOnTouchDetailPhoto(onTouchDetailPhoto: OnTouchListenerCallback){
+        this.onTouchListenerCallback=onTouchDetailPhoto
     }
-    interface OnclickDetailPhoto{
-        fun onClickDetailPhoto()
+    interface OnTouchListenerCallback {
+        fun onItemTouched(v:View,  event:MotionEvent,photo: Photo?)
     }
+
+    inner class ScaleListener(private val imageView: AppCompatImageView) : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        private var scaleFactor = 1.0f
+
+        override fun onScale(detector: ScaleGestureDetector): Boolean {
+            scaleFactor *= detector.scaleFactor
+            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f))
+            imageView.scaleX = scaleFactor
+            imageView.scaleY = scaleFactor
+            return true
+        }
+    }
+
 
 }
