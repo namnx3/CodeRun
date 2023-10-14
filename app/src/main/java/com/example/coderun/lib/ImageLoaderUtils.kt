@@ -1,4 +1,4 @@
-package com.example.coderun
+package com.example.coderun.lib
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,6 +7,7 @@ import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ImageView
+import com.example.coderun.R
 import java.util.Collections
 import java.util.WeakHashMap
 import java.util.concurrent.ExecutorService
@@ -18,7 +19,7 @@ class ImageLoaderUtils private constructor(context: Context) {
         private var imageLoaderUtils: ImageLoaderUtils? = null
 
         fun getInstance(context: Context): ImageLoaderUtils {
-            return this.imageLoaderUtils ?: synchronized(this) {
+            return imageLoaderUtils ?: synchronized(this) {
                 val new = ImageLoaderUtils(context)
                 imageLoaderUtils = new
                 new
@@ -106,7 +107,7 @@ class ImageLoaderUtils private constructor(context: Context) {
 
     class PhotoToLoad(var url: String, var imageView: ImageView)
 
-    inner class PhotosLoader(var photoToLoad: ImageLoaderUtils.PhotoToLoad) :
+    inner class PhotosLoader(var photoToLoad: PhotoToLoad) :
         Runnable {
         override fun run() {
             try {
@@ -145,7 +146,7 @@ class ImageLoaderUtils private constructor(context: Context) {
             //            options.inSampleSize = calculateInSampleSize(options, imageWidth, imageHeight);
             //            options.inJustDecodeBounds = false;
             var bitmap = BitmapFactory.decodeFile(url)
-            bitmap = Bitmap.createScaledBitmap(bitmap!!, 1080 / 3, 1080 / 3, false)
+            bitmap = Bitmap.createScaledBitmap(bitmap!!, width, height, false)
             bitmap
         } catch (ex: Throwable) {
             ex.printStackTrace()
@@ -154,7 +155,7 @@ class ImageLoaderUtils private constructor(context: Context) {
         }
     }
 
-    fun imageViewReused(photoToLoad: ImageLoaderUtils.PhotoToLoad): Boolean {
+    fun imageViewReused(photoToLoad: PhotoToLoad): Boolean {
         val tag = imageViews[photoToLoad.imageView]
         //Check url is already exist in imageViews MAP
         return if (tag == null || tag != photoToLoad.url) true else false
@@ -163,7 +164,7 @@ class ImageLoaderUtils private constructor(context: Context) {
     //Used to display bitmap in the UI thread
     inner class BitmapDisplayer(
         var bitmap: Bitmap?,
-        var photoToLoad: ImageLoaderUtils.PhotoToLoad
+        var photoToLoad: PhotoToLoad
     ) :
         Runnable {
         override fun run() {

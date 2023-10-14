@@ -1,4 +1,4 @@
-package com.example.coderun;
+package com.example.coderun.lib;
 
 import android.graphics.Bitmap;
 import android.util.Log;
