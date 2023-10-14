@@ -14,6 +14,7 @@ import com.example.coderun.databinding.ActivityMainBinding
 import com.example.coderun.lib.ImageLoader
 import com.example.coderun.lib.ImageLoaderUtils
 import com.example.coderun.model.ImageObject
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: GlideAdapter
     private var listData = mutableListOf<ImageObject>()
+   private lateinit var gSon:Gson
 
     private var imageLoader: ImageLoader? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         this.initData()
         initView()
         initEvent()
-
+         gSon=Gson()
         if (checkPermission()) {
             getAllImage()
             return
@@ -123,6 +125,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        adapter.setOnclickDetailPhoto(object : GlideAdapter.OnClickDetailPhoto{
+            override fun onClickDetailSelected(listData: MutableList<Int>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onClickDetail(item: ImageObject) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     override fun onBackPressed() {
