@@ -1,13 +1,19 @@
 package com.example.coderun
 
 import android.graphics.Matrix
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import com.example.coderun.adapter.ImageDetailAdapter
 import com.example.coderun.databinding.ActivityDetailPhotoActicityBinding
 import com.example.coderun.model.Photo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailPhotoActicity : AppCompatActivity() {
     private lateinit var binding:ActivityDetailPhotoActicityBinding
@@ -19,6 +25,7 @@ class DetailPhotoActicity : AppCompatActivity() {
     private var lastEvent: MotionEvent? = null
     private var prevX = 0f
     private var prevY = 0f
+    val listPhoto:MutableList<Photo> = mutableListOf()
     companion object {
         private const val NONE = 0
         private const val DRAG = 1
@@ -45,5 +52,8 @@ class DetailPhotoActicity : AppCompatActivity() {
         listPhoto.add(Photo(R.drawable.img4))
         return listPhoto
     }
+
+
+
 
 }
