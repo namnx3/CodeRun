@@ -1,10 +1,16 @@
 package com.example.coderun
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.coderun.adapter.GlideAdapter
 import com.example.coderun.databinding.ActivityMainBinding
 import com.example.coderun.lib.ImageLoader
@@ -30,19 +36,71 @@ class MainActivity : AppCompatActivity() {
         this.initData()
         initView()
         initEvent()
+
+        if (checkPermission()) {
+            getAllImage()
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(
+                arrayOf(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Manifest.permission.READ_MEDIA_IMAGES
+                    } else {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }
+                ), 100
+            )
+        }
+
+    }
+
+    private fun getAllImage(){
+        GlobalScope.launch {
+            val list = getLocalImagePaths()
+            for (item in list) {
+                listData.add(ImageObject(item))
+            }
+            withContext(Dispatchers.Main) {
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+
+    private fun checkPermission(): Boolean {
+        val permissionString = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            return true
+        }
+
+        if (checkSelfPermission(permissionString) == PackageManager.PERMISSION_DENIED) {
+            return false
+        }
+
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getAllImage()
+        }
     }
 
     private fun initEvent() {
         binding.btLoadData.setOnClickListener {
-            GlobalScope.launch {
-                val list = getLocalImagePaths()
-                for (item in list) {
-                    listData.add(ImageObject(item))
-                }
-                withContext(Dispatchers.Main) {
-                    adapter.notifyDataSetChanged()
-                }
-            }
+            getAllImage()
         }
 
         adapter.onItemLongClick = {
