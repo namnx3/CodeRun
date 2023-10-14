@@ -21,8 +21,7 @@ class GlideAdapter(
     var onMode: Boolean = false
     private var imageLoader: ImageLoader? = null
     var listManagerPosSelect = mutableListOf<Int>()
-    private var onClickDetailPhoto:OnClickDetailPhoto?=null
-
+    private var onClickDetailPhoto: OnClickDetailPhoto? = null
 
 
     init {
@@ -65,16 +64,30 @@ class GlideAdapter(
                 }
                 false
             }
+//            binding.root.setOnClickListener {
+//                if (item.isSelected) {
+//                    onClickDetailPhoto?.onClickDetailSelected(listManagerPosSelect, adapterPosition)
+//                } else {
+//                    onClickDetailPhoto?.onClickDetail(item)
+//                }
+//
+//            }
+//            binding.lnRootChooseItemImgSlide.setOnClickListener {
+//                onItemSelected?.invoke(position)
+//            }
             binding.root.setOnClickListener {
-                if(item.isSelected){
-                    onClickDetailPhoto?.onClickDetailSelected(listManagerPosSelect,adapterPosition)
-                }else{
-                    onClickDetailPhoto?.onClickDetail(item)
+                if (onMode) {
+                    onItemSelected?.invoke(position)
+                } else {
+                    if (item.isSelected) {
+                        onClickDetailPhoto?.onClickDetailSelected(
+                            listManagerPosSelect,
+                            adapterPosition
+                        )
+                    } else {
+                        onClickDetailPhoto?.onClickDetail(item)
+                    }
                 }
-
-            }
-            binding.lnRootChooseItemImgSlide.setOnClickListener {
-                onItemSelected?.invoke(position)
             }
         }
     }
@@ -88,14 +101,14 @@ class GlideAdapter(
         holder.bind(listData[position])
     }
 
-    fun setOnclickDetailPhoto(onClickDetailPhoto: OnClickDetailPhoto){
-        this.onClickDetailPhoto=onClickDetailPhoto
+    fun setOnclickDetailPhoto(onClickDetailPhoto: OnClickDetailPhoto) {
+        this.onClickDetailPhoto = onClickDetailPhoto
     }
 
     override fun getItemCount(): Int = listData.size
 
-    interface OnClickDetailPhoto{
-        fun onClickDetailSelected(listData: MutableList<Int>,position: Int)
+    interface OnClickDetailPhoto {
+        fun onClickDetailSelected(listData: MutableList<Int>, position: Int)
         fun onClickDetail(item: ImageObject)
     }
 }
