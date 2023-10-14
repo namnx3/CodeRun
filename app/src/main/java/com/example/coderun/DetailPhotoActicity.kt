@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
-import android.view.View
-import com.example.coderun.adapter.DetailImageAdapter
+import com.example.coderun.adapter.ImageDetailAdapter
 import com.example.coderun.databinding.ActivityDetailPhotoActicityBinding
 import com.example.coderun.model.Photo
 
 class DetailPhotoActicity : AppCompatActivity() {
     private lateinit var binding:ActivityDetailPhotoActicityBinding
-    private var detailImageAdapter:DetailImageAdapter?=null
+    private var detailImageAdapter:ImageDetailAdapter?=null
     private lateinit var scaleGestureDetector: ScaleGestureDetector
     private var scaleFactor = 1.0f
     private var matrix = Matrix()
@@ -29,7 +28,7 @@ class DetailPhotoActicity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding=ActivityDetailPhotoActicityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        detailImageAdapter=DetailImageAdapter(this,getListPhoto())
+        detailImageAdapter=ImageDetailAdapter(this,getListPhoto())
         binding.vpDetailPhoto.adapter=detailImageAdapter;
 
 

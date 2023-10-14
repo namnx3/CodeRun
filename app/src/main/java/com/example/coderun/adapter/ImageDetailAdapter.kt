@@ -2,20 +2,16 @@ package com.example.coderun.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Matrix
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ScaleGestureDetector
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coderun.databinding.DetailImageBinding
 import com.example.coderun.model.Photo
 
-class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) : RecyclerView.Adapter<DetailImageAdapter.DetailViewHolder>() {
-
+class ImageDetailAdapter(var context:Context, var listPhoto:MutableList<Photo>) : RecyclerView.Adapter<ImageDetailAdapter.DetailViewHolder>() {
+    var isSelected=false
 
     companion object {
         private const val NONE = 0
@@ -31,10 +27,17 @@ class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) :
         fun onBind(photo: Photo?) {
             val scaleGestureDetector = ScaleGestureDetector(context, ScaleListener(binding.imgPhoto))
             binding.imgPhoto.setImageResource(photo?.img!!)
-//            binding.imgPhoto.setOnTouchListener { v, event ->
-//                scaleGestureDetector.onTouchEvent(event)
-//                return@setOnTouchListener true
-//            }
+            binding.imgSelected.setOnClickListener {
+                if (isSelected) {
+                    isSelected = false
+                    binding.imgSelected.isSelected=isSelected
+                } else {
+                    isSelected = true
+                    binding.imgSelected.isSelected=isSelected
+                }
+
+            }
+
 
         }
     }
