@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.coderun.adapter.GlideAdapter
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         this.initData()
         initView()
         initEvent()
-         gSon=Gson()
+         gSon= Gson()
         if (checkPermission()) {
             getAllImage()
             return
@@ -130,13 +131,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
         adapter.setOnclickDetailPhoto(object : GlideAdapter.OnClickDetailPhoto{
-            override fun onClickDetailSelected(listData: MutableList<Int>) {
-                TODO("Not yet implemented")
+            override fun onClickDetailSelected(listNew: MutableList<Int>, position: Int) {
+                val list= mutableListOf<Int>()
+                list.addAll(listNew)
+                for (index in list) {
+                    Log.e("INdexURL",  listData[index].avatar)
+
+                }
             }
 
             override fun onClickDetail(item: ImageObject) {
                 TODO("Not yet implemented")
             }
+
 
         })
     }

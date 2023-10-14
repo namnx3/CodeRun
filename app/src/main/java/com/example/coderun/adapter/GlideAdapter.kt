@@ -66,7 +66,7 @@ class GlideAdapter(
             }
             binding.root.setOnClickListener {
                 if(item.isSelected){
-                    onClickDetailPhoto?.onClickDetailSelected(listManagerPosSelect)
+                    onClickDetailPhoto?.onClickDetailSelected(listManagerPosSelect,adapterPosition)
                 }else{
                     onClickDetailPhoto?.onClickDetail(item)
                 }
@@ -94,7 +94,7 @@ class GlideAdapter(
     override fun getItemCount(): Int = listData.size
 
     interface OnClickDetailPhoto{
-        fun onClickDetailSelected(listData: MutableList<Int>)
+        fun onClickDetailSelected(listData: MutableList<Int>,position: Int)
         fun onClickDetail(item: ImageObject)
     }
 }

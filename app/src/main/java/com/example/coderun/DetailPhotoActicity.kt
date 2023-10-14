@@ -25,7 +25,6 @@ class DetailPhotoActicity : AppCompatActivity() {
     private var lastEvent: MotionEvent? = null
     private var prevX = 0f
     private var prevY = 0f
-    val listPhoto:MutableList<Photo> = mutableListOf()
     companion object {
         private const val NONE = 0
         private const val DRAG = 1
