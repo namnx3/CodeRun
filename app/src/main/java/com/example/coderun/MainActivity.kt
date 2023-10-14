@@ -7,10 +7,13 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.DisplayMetrics
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.example.coderun.adapter.GlideAdapter
 import com.example.coderun.databinding.ActivityMainBinding
+import com.example.coderun.lib.ImageLoader
+import com.example.coderun.lib.ImageLoaderUtils
+import com.example.coderun.model.ImageObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,7 +23,7 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: GlideAdapter
-    private var listData = mutableListOf<String>()
+    private var listData = mutableListOf<ImageObject>()
 
     private var imageLoader: ImageLoader? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         this.initData()
         initView()
+        initEvent()
 
         if (checkPermission()) {
             getAllImage()
@@ -47,28 +51,21 @@ class MainActivity : AppCompatActivity() {
                 ), 100
             )
         }
-    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getAllImage()
-        }
     }
 
     private fun getAllImage(){
         GlobalScope.launch {
             val list = getLocalImagePaths()
+            for (item in list) {
+                listData.add(ImageObject(item))
+            }
             withContext(Dispatchers.Main) {
-                listData.addAll(list.toMutableList())
                 adapter.notifyDataSetChanged()
             }
         }
     }
+
 
     private fun checkPermission(): Boolean {
         val permissionString = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -86,6 +83,55 @@ class MainActivity : AppCompatActivity() {
         }
 
         return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getAllImage()
+        }
+    }
+
+    private fun initEvent() {
+        binding.btLoadData.setOnClickListener {
+            getAllImage()
+        }
+
+        adapter.onItemLongClick = {
+            adapter.onMode = true
+            adapter.notifyDataSetChanged()
+        }
+        adapter.onItemSelected = { posSelect ->
+            listData[posSelect].isSelected = !listData[posSelect].isSelected
+            if (listData[posSelect].isSelected) {
+                adapter.listManagerPosSelect.add(posSelect)
+                listData[posSelect].valeStt =
+                    adapter.listManagerPosSelect.indexOf(posSelect) + 1
+                adapter.notifyItemChanged(posSelect)
+            } else {
+                listData[posSelect].valeStt = -1
+                adapter.notifyItemChanged(posSelect)
+                val indexStart = adapter.listManagerPosSelect.indexOf(posSelect)
+                adapter.listManagerPosSelect.remove(posSelect)
+                for (i in indexStart until adapter.listManagerPosSelect.size) {
+                    listData[adapter.listManagerPosSelect[i]].valeStt = i + 1
+                    adapter.notifyItemChanged(adapter.listManagerPosSelect[i])
+                }
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (adapter.onMode) {
+            adapter.onMode = false
+            adapter.notifyDataSetChanged()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun initData() {
