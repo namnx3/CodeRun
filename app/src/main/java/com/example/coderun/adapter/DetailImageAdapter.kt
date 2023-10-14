@@ -15,7 +15,7 @@ import com.example.coderun.databinding.DetailImageBinding
 import com.example.coderun.model.Photo
 
 class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) : RecyclerView.Adapter<DetailImageAdapter.DetailViewHolder>() {
-    private var onclickDetailPhoto: DetailViewHolder.OnclickDetailPhoto?=null
+//    private var onclickDetailPhoto: DetailViewHolder.OnclickDetailPhoto?=null
     private lateinit var scaleGestureDetector: ScaleGestureDetector
     private var scaleFactor = 1.0f
 
@@ -54,7 +54,7 @@ class DetailImageAdapter(var context:Context,var listPhoto:MutableList<Photo>) :
       holder.onBind(listPhoto[position])
     }
     fun  setOnclickDetailPhoto(onclickDetailPhoto: OnclickDetailPhoto){
-        this.onclickDetailPhoto=onclickDetailPhoto
+//        this.onclickDetailPhoto=onclickDetailPhoto
     }
     interface OnclickDetailPhoto{
         fun onClickDetailPhoto()
