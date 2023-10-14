@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun getAllImage(){
+    private fun getAllImage() {
         GlobalScope.launch {
             val list = getLocalImagePaths()
             for (item in list) {
@@ -155,6 +155,13 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (adapter.onMode) {
             adapter.onMode = false
+            if (adapter.listManagerPosSelect.isNotEmpty()) {
+                for (i in adapter.listManagerPosSelect) {
+                    listData[i].isSelected = false
+                    listData[i].valeStt = -1
+                }
+            }
+            adapter.listManagerPosSelect.clear()
             adapter.notifyDataSetChanged()
         } else {
             super.onBackPressed()
