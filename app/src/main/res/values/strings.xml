@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CodeRun</string>
+    <string name="str_selected">Chọn</string>
 </resources>
