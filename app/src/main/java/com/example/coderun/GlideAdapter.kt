@@ -11,14 +11,16 @@ class GlideAdapter(
     val context: Context
 ) : RecyclerView.Adapter<GlideAdapter.GlideVH>() {
 
-    private var imageLoader: ImageLoader?=null
+    private var imageLoader: ImageLoader? = null
+
     init {
-        this.imageLoader= ImageLoader(context)
+        this.imageLoader = ImageLoader(context)
     }
+
     inner class GlideVH(val binding: ItemImageSlideBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: String) {
-            imageLoader?.DisplayImage(item, this.binding.ivImage)
+            imageLoader?.DisplayImage(item, this.binding.ivImageSlide)
         }
     }
 
